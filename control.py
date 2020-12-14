@@ -1,10 +1,12 @@
 import PySimpleGUI as sg
+import playsound
 from time import sleep
 
 sg.theme("Dark Amber")
 
 tic=0
 timerGeral=''
+
 
 def init():
     num=[]
@@ -38,42 +40,56 @@ def init():
         window["-nun-"].update(tex)
 
     window.close()
-    Toca(num)
+    for i in range(6-len(num)):
+        n=[0]
+        n.extend(num)
+        num=n
+    lim=[""+str(num[0])+str(num[1])+"",""+str(num[2])+str(num[3])+"",""+str(num[4])+str(num[5])+""]
+    Toca(lim)
 
 def Toca(n):
+    print(n)
     
     timer=100
     boolCont=True
     valor='00:00:00'
+    contri=[0,0,0,0,0,0]
     seg=0
     minu=0
     hor=0
     Segtmp=''
     Mintmp='00'
     Hortmp='00'
-    print(n)
-    lay2=[[sg.Button("Pausar"),sg.Button("Parar"),sg.Text(font=(16,16),size=(8,1),key="-nu-")]]
+    lay2=[[sg.Button("Pausar",button_color=(["black","#fdcb52"]),key="-cor-" ),sg.Button("Parar"),sg.Text(font=(16,16),size=(8,1),key="-nu-")]]
 
-    window2=sg.Window("Toncando",lay2)
+    window2=sg.Window("Toncando",lay2, finalize=True)
 
     while True:
         global timerGeral
         global tic
         tic+=1
+
         # Velocidade do while
-        if boolCont:
-            timer=100
-        else:
-            timer=None
+
+        try:
+            if boolCont:
+                window2["-cor-"].update(button_color=(["black","#fdcb52"]))
+                timer=100
+            else:
+                window2["-cor-"].update(button_color=(["black","#a87500"]))
+                timer=None
+        finally:
+            pass
 
         e, v=window2.read(timer)
 
         if e== sg.WINDOW_CLOSED or e=="Parar":
             timerGeral=''
             break
-        if e=="Pausar":
+     
+        if e=="-cor-":
             # Pausar o contador
-            if boolCont:
+            if boolCont and timer==100:
                 boolCont=False
             else:
                 boolCont=True
@@ -102,6 +118,13 @@ def Toca(n):
             if seg<10:
                 segn='0'+str(seg)
                 Segtmp=segn
+            
+            if Hortmp==n[0] and Mintmp==n[1] and Segtmp==n[2]:
+                window2["-cor-"].update(button_color=(["black","#a87500"]))
+                # playsound('play.mp3')
+                playsound.playsound('play.mp3')
+                
+                boolCont=False
 
             timerGeral=Hortmp+':'+Mintmp+':'+Segtmp
             tic=0
