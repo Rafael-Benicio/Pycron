@@ -1,11 +1,22 @@
 import PySimpleGUI as sg
-import playsound
 from time import sleep
+import pygame
+import os
+
+
 
 sg.theme("Dark Amber")
 
 tic=0
 timerGeral=''
+
+def sons():
+    pygame.init()
+
+    # Carregando o arquivo MP3 e executando
+    pygame.mixer.music.load('play.wav')
+    pygame.mixer.music.play()
+    pygame.mixer.music.set_volume(1)
 
 
 def init():
@@ -121,9 +132,8 @@ def Toca(n):
             
             if Hortmp==n[0] and Mintmp==n[1] and Segtmp==n[2]:
                 window2["-cor-"].update(button_color=(["black","#a87500"]))
-                # playsound('play.mp3')
-                playsound.playsound('play.mp3')
-                
+                for i in range(2):
+                    sons()
                 boolCont=False
 
             timerGeral=Hortmp+':'+Mintmp+':'+Segtmp
